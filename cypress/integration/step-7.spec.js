@@ -18,13 +18,14 @@ context.only('BirdBoard', () => {
   it('load tweets for selected hashtags', () => {
     cy.server()
 
+
     // Fixture is stored in cypress/fixtures/tweets.json
     cy.fixture('tweets').then((tweets) => {
       cy.route({
-        url: '/tweets*',
-        response: tweets,
-        delay: 3000, // simulate slow response
-        status: 404
+        url: '/tweets',
+        response: {body: tweets},
+        delay: 3000, 
+        status: 400
       })
       .as('tweets')
     })
