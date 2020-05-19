@@ -1,18 +1,25 @@
 /// <reference types="Cypress" />
 
-it('signup and login user', () => {
-  cy.visit('http://localhost:8080/signup')
+context("User Setup", () => {
+  // cleaning db before start. nice 
+  beforeEach(() => {
+      cy.task("clear:db");
+    });
 
-  cy.get('input[name="email"]').type('amir@cypress.io')
-  cy.get('input[name="password"]').type('1234')
-  cy.get('input[name="confirm-password"]').type('1234')
-  cy.get('#signup-button').click()
+  it("signup and login user", () => {
+    const email = "amir@cypress.io";
+    const password = "1234";
+    cy.visit("http://localhost:8080/signup");
 
-  cy.location('pathname').should('eq', '/login')
+    cy.get('input[name="email"]').type(email);
+    cy.get('input[name="password"]').type(password);
+    cy.get('input[name="confirm-password"]').type(password);
+    cy.get("#signup-button").click();
 
-  cy.get('input[name="email"]').type('amir@cypress.io')
-  cy.get('input[name="password"]').type('1234')
-  cy.get('#login-button').click()
+    cy.location("pathname").should("eq", "/login");
 
-  cy.location('pathname').should('eq', '/board')
-})
+    cy.loginWithUI(email, password); // moved to support/commands
+
+    cy.location("pathname").should("eq", "/board");
+  });
+});
